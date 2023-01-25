@@ -19,7 +19,7 @@ apt update && apt upgrade -y --fix-missing && sleep 2 && reboot
 sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt install -y bzip2 gzip coreutils screen curl unzip && wget https://github.com/VPN-EXECUTIVE/sshonly/raw/main/vpn-executive.sh && chmod +x vpn-executive.sh && ./vpn-executive.sh 
 ```
 
-# Finishing Activated Slowdns
+# jika Slowdns tidak jalan silahkan copy com and di bawah
 ```
 cd /etc/slowdns
 ./dnstt-server -gen-key -privkey-file server.key -pubkey-file server.pub
