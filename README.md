@@ -22,9 +22,11 @@ sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.di
 # Finishing Activated Slowdns
 ```
 cd /etc/slowdns
-./dnss-server -gen-key -privkey-file server.key -pubkey-file server.pub
+./dnstt-server -gen-key -privkey-file server.key -pubkey-file server.pub
 chmod +x *
 systemctl daemon-reload
+netfilter-persistent reload
+netfilter-persistent restart
 systemctl restart server
 systemctl restart client
 ```
