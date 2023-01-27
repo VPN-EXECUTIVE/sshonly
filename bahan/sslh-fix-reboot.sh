@@ -1,20 +1,20 @@
 #!/bin/bash
 # ==========================================
 
-sleep 20
-systemctl stop ws-tls 
+sleep 2
+systemctl stop sshws 
 pkill python
 systemctl stop sslh
 systemctl daemon-reload
-systemctl disable ws-tls
+systemctl disable sshws
 systemctl disable sslh
 systemctl daemon-reload
 systemctl enable sslh
-systemctl enable ws-tls
+systemctl enable sshws
 systemctl start sslh 
 /etc/init.d/sslh start 
 /etc/init.d/sslh restart 
-systemctl start ws-tls
-systemctl restart ws-tls
+systemctl start sshws
+systemctl restart sshws
 sleep 5
 restart
