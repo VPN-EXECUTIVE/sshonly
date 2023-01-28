@@ -6,6 +6,14 @@
 - SSH SLOWDNS
 - SSH OHP (OFF)
 
+# Service Port All SSH
+- SSH => 22
+- SSH DROPBEAR => 109,77
+- SSH WS SSL => 443,777
+- SSH STUNNEL => 443,777
+- SSH NON TLS => 80
+- SSH SLOWDNS => 53,443,777
+
 # Command Install your Server
 # Attention please login as root
 
