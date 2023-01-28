@@ -4,7 +4,7 @@
 - SSH OVPN
 - SSH CDN WEBSOCKET
 - SSH SLOWDNS
-- SSH OHP
+- SSH OHP (OFF)
 
 # Command Install your Server
 # Attention please login as root
