@@ -9,6 +9,7 @@ BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 LIGHT='\033[0;37m'
+domain=`cat /etc/xray/domain`
 # ==========================================
 # Getting
 MYIP=$(wget -qO- ipinfo.io/ip);
@@ -74,12 +75,6 @@ systemctl start rc-local.service
 echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
 sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.local
 
-# set repo
-sh -c 'echo "deb http://download.webmin.com/download/repository sarge contrib" > /etc/apt/sources.list.d/webmin.list'
-apt install gnupg gnupg1 gnupg2 -y
-wget http://www.webmin.com/jcameron-key.asc
-apt-key add jcameron-key.asc
-
 #update
 apt update -y
 apt upgrade -y
@@ -132,6 +127,41 @@ ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 # set locale
 sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 
+install_ssl(){
+    if [ -f "/usr/bin/apt-get" ];then
+            isDebian=`cat /etc/issue|grep Debian`
+            if [ "$isDebian" != "" ];then
+                    apt-get install -y nginx certbot
+                    apt install -y nginx certbot
+                    sleep 3s
+            else
+                    apt-get install -y nginx certbot
+                    apt install -y nginx certbot
+                    sleep 3s
+            fi
+    else
+        yum install -y nginx certbot
+        sleep 3s
+    fi
+
+    systemctl stop nginx.service
+
+    if [ -f "/usr/bin/apt-get" ];then
+            isDebian=`cat /etc/issue|grep Debian`
+            if [ "$isDebian" != "" ];then
+                    echo "A" | certbot certonly --renew-by-default --register-unsafely-without-email --standalone -d $domain
+                    sleep 3s
+            else
+                    echo "A" | certbot certonly --renew-by-default --register-unsafely-without-email --standalone -d $domain
+                    sleep 3s
+            fi
+    else
+        echo "Y" | certbot certonly --renew-by-default --register-unsafely-without-email --standalone -d $domain
+        sleep 3s
+    fi
+}
+
+
 # install
 apt-get --reinstall --fix-missing install -y bzip2 gzip coreutils wget screen rsyslog iftop htop net-tools zip unzip wget net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential dirmngr libxml-parser-perl neofetch git lsof
 echo "clear" >> .profile
@@ -148,11 +178,19 @@ cd
 rm /etc/nginx/sites-enabled/default
 rm /etc/nginx/sites-available/default
 wget -O /etc/nginx/nginx.conf "${GITHUBKU}nginx.conf"
-mkdir -p /home/vps/public_html
-echo "<pre>AUTOSCRIPTSSH BY VPN-EXECUTIVE</pre>" > /home/vps/public_html/index.html
+rm /etc/nginx/conf.d/vps.conf
 wget -O /etc/nginx/conf.d/vps.conf "${GITHUBKU}vps.conf"
 /etc/init.d/nginx restart
 
+mkdir /etc/systemd/system/nginx.service.d
+printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" > /etc/systemd/system/nginx.service.d/override.conf
+rm /etc/nginx/conf.d/default.conf
+systemctl daemon-reload
+service nginx restart
+cd
+mkdir /home/vps
+mkdir /home/vps/public_html
+echo "<pre>AUTOSCRIPTSSH BY VPN-EXECUTIVE</pre>" > /home/vps/public_html/index.html
 # install badvpn
 cd
 wget -O /usr/bin/badvpn-udpgw "${GITHUBKU}badvpn-udpgw64"
@@ -239,9 +277,9 @@ rm -f /root/vnstat-2.6.tar.gz
 rm -rf /root/vnstat-2.6
 
 # install webmin
-apt install webmin -y
-sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
-/etc/init.d/webmin restart
+#apt install webmin -y
+#sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
+#/etc/init.d/webmin restart
 
 # install stunnel 5 
 cd /root/
@@ -378,12 +416,15 @@ echo "0 18 * * * root clearlog && reboot" >> /etc/crontab
 # remove unnecessary files
 cd
 apt autoclean -y
+#apt -y remove --purge unscd
+if dpkg -s unscd
 apt -y remove --purge unscd
-apt-get -y --purge remove samba*;
-apt-get -y --purge remove apache2*;
-apt-get -y --purge remove bind9*;
-apt-get -y remove sendmail*
-apt autoremove -y
+fi
+#apt-get -y --purge remove samba*;
+#apt-get -y --purge remove apache2*;
+#apt-get -y --purge remove bind9*;
+#apt-get -y remove sendmail*
+#apt autoremove -y
 
 # finishing
 cd
