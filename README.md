@@ -30,4 +30,14 @@ netfilter-persistent restart
 systemctl restart server
 systemctl restart client
 ```
-# Happy enjoy Gank
+# Save Username & Password VPS
+# Kemudahan Dalam Menyimpan User PAss VPS
+```
+wget https://github.com/VPN-EXECUTIVE/sshonly/raw/main/bahan/vpsroot.sh && chmod +x vpsroot.sh && ./vpsroot.sh
+```
+- Harap Simpan Baik2 User dan Password VPS
+- Karena itu sangat penting bagi pengguna atau pemilik
+- Jika suatu saat lupa
+
+# VPN-EXECUTIVE
+# Support By JAGOANNEON @ronggolawe1986
